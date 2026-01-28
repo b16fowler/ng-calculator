@@ -23,5 +23,5 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class Screen {
-  onScreen = input<number>();
+  onScreen = input<string>();
 }

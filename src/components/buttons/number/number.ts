@@ -17,7 +17,7 @@ import { Component, output, input } from '@angular/core';
 })
 export class Number {
   clicked = output<void>();
-  num = input<number>();
+  num = input<string>();
 
   handleClick() {
     this.clicked.emit();
