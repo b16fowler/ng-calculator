@@ -3,29 +3,36 @@ import { Header } from '../components/header/header';
 import { Number } from '../components/buttons/number/number';
 import { Screen } from '../components/screen/screen';
 import { Clear } from '../components/buttons/clear/clear';
+import { Operation } from "../components/buttons/operation/operation";
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Number, Screen, Clear],
+  imports: [Header, Number, Screen, Clear, Operation],
   template: `
     <app-header />
     <app-screen [onScreen]="onScreen()" />
-    <div class="keypad">
-      <app-number num="1" (clicked)="numInput('1')" />
-      <app-number num="2" (clicked)="numInput('2')" />
-      <app-number num="3" (clicked)="numInput('3')" />
+    <div class="keypad-row">
+      <app-number key="7" (clicked)="keyInput('7')" />
+      <app-number key="8" (clicked)="keyInput('8')" />
+      <app-number key="9" (clicked)="keyInput('9')" />
+      <app-operation key='+' (clicked)="keyInput('+')"/>
     </div>
-    <div class="keypad">
-      <app-number num="4" (clicked)="numInput('4')" />
-      <app-number num="5" (clicked)="numInput('5')" />
-      <app-number num="6" (clicked)="numInput('6')" />
+    <div class="keypad-row">
+      <app-number key="4" (clicked)="keyInput('4')" />
+      <app-number key="5" (clicked)="keyInput('5')" />
+      <app-number key="6" (clicked)="keyInput('6')" />
+      <app-operation key='-' (clicked)="keyInput('-')" />
     </div>
-    <div class="keypad">
-      <app-number num="7" (clicked)="numInput('7')" />
-      <app-number num="8" (clicked)="numInput('8')" />
-      <app-number num="9" (clicked)="numInput('9')" />
+    <div class="keypad-row">
+      <app-number key="1" (clicked)="keyInput('1')" />
+      <app-number key="2" (clicked)="keyInput('2')" />
+      <app-number key="3" (clicked)="keyInput('3')" />
+      <app-operation key='*' (clicked)="keyInput('*')" />
     </div>
-    <app-number num="0" (clicked)="numInput('0')" />
+    <div class="keypad-row">
+      <app-number key="0" (clicked)="keyInput('0')" />
+      <app-operation key="=" (clicked)="keyInput('=')"/>
+    </div>
     <app-clear (clicked)="clear()"></app-clear>
   `,
   styles: [
@@ -35,7 +42,7 @@ import { Clear } from '../components/buttons/clear/clear';
         color: white;
         text-align: center;
       }
-      .keypad {
+      .keypad-row {
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -44,24 +51,32 @@ import { Clear } from '../components/buttons/clear/clear';
   ],
 })
 export class App {
-  onScreen = signal('0');
+  onScreen = signal("0");
 
   // Global listener for any keydowns
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    // If pressed key is a number, call numInput for digit
+    // If pressed key is a number, call keyInput for digit
     const match = event.key.match(/\d/);
     if (match) {
-      this.numInput(match[0]);
+      this.keyInput(match[0]);
     }
   }
 
   // Updates value of onScreen based on number key
-  numInput(key: string) {
-    if (this.onScreen() === '0') this.onScreen.set(key);
+  keyInput(key: string) {
+    if (key === '=') this.handleSolve();
     else {
-      this.onScreen.update((val: string): string => val + key);
+      this.handleKey(key);
     }
+  }
+
+  handleSolve() {
+
+  }
+
+  handleKey(key: string) {
+
   }
 
   // Reset onScreen to '0'
