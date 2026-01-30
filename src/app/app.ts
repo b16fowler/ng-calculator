@@ -30,8 +30,10 @@ import { Operation } from "../components/buttons/operation/operation";
       <app-operation key='*' (clicked)="keyInput('*')" />
     </div>
     <div class="keypad-row">
+      <app-number key=" " />
       <app-number key="0" (clicked)="keyInput('0')" />
       <app-operation key="=" (clicked)="keyInput('=')"/>
+      <app-operation key="/" (clicked)="keyInput('/')"/>
     </div>
     <app-clear (clicked)="clear()"></app-clear>
   `,
@@ -72,15 +74,30 @@ export class App {
   }
 
   handleSolve() {
+    //TODO: USE LATER AS TO NOT USE EVAL()
+    // const split = this.onScreen().split(/\D/);
+    // const operation = this.onScreen().match(/\D/)?.[0];
+    
+    // const num1 = +split[0];
+    // const num2 = +split[1];
+    // console.log("onScreen(): ", this.onScreen());
+    // console.log("num1: ", num1);
+    // console.log("num2: ", num2);
+    // console.log("operation: ", operation);
 
+    // Easy solution (for now)
+    this.onScreen.set(eval(this.onScreen()));
   }
 
   handleKey(key: string) {
-
+    if (this.onScreen() === "0") this.onScreen.set(key);
+    else {
+      this.onScreen.update(val => val + key);
+    }
   }
 
-  // Reset onScreen to '0'
+  // Reset onScreen to 0
   clear() {
-    this.onScreen.set('0');
+    this.onScreen.set("0");
   }
 }
