@@ -12,29 +12,30 @@ import { Operation } from "../components/buttons/operation/operation";
     <app-header />
     <app-screen [onScreen]="onScreen()" />
     <div class="keypad-row">
-      <app-number key="7" (clicked)="keyInput('7')" />
-      <app-number key="8" (clicked)="keyInput('8')" />
-      <app-number key="9" (clicked)="keyInput('9')" />
-      <app-operation key='+' (clicked)="keyInput('+')"/>
+      <app-number key="7" (clicked)="handleKey('7')" />
+      <app-number key="8" (clicked)="handleKey('8')" />
+      <app-number key="9" (clicked)="handleKey('9')" />
+      <app-operation key='+' (clicked)="handleOperation('+')"/>
     </div>
     <div class="keypad-row">
-      <app-number key="4" (clicked)="keyInput('4')" />
-      <app-number key="5" (clicked)="keyInput('5')" />
-      <app-number key="6" (clicked)="keyInput('6')" />
-      <app-operation key='-' (clicked)="keyInput('-')" />
+      <app-number key="4" (clicked)="handleKey('4')" />
+      <app-number key="5" (clicked)="handleKey('5')" />
+      <app-number key="6" (clicked)="handleKey('6')" />
+      <app-operation key='-' (clicked)="handleOperation('-')" />
     </div>
     <div class="keypad-row">
-      <app-number key="1" (clicked)="keyInput('1')" />
-      <app-number key="2" (clicked)="keyInput('2')" />
-      <app-number key="3" (clicked)="keyInput('3')" />
-      <app-operation key='*' (clicked)="keyInput('*')" />
+      <app-number key="1" (clicked)="handleKey('1')" />
+      <app-number key="2" (clicked)="handleKey('2')" />
+      <app-number key="3" (clicked)="handleKey('3')" />
+      <app-operation key='*' (clicked)="handleOperation('*')" />
     </div>
     <div class="keypad-row">
       <app-number key=" " />
-      <app-number key="0" (clicked)="keyInput('0')" />
-      <app-operation key="=" (clicked)="keyInput('=')"/>
-      <app-operation key="/" (clicked)="keyInput('/')"/>
+      <app-number key="0" (clicked)="handleKey('0')" />
+      <app-number key="." />
+      <app-operation key="/" (clicked)="handleOperation('/')"/>
     </div>
+    <app-operation key="=" (clicked)="handleOperation('=')"/>
     <app-clear (clicked)="clear()"></app-clear>
   `,
   styles: [
@@ -61,18 +62,7 @@ export class App {
     // If pressed key is a number, call keyInput for digit
     const match = event.key.match(/\d/);
     if (match) {
-      this.keyInput(match[0]);
-    }
-  }
-
-  // Updates value of onScreen based on number key
-  keyInput(key: string) {
-    if (key === '=') this.handleSolve();
-    else if (!key.match(/\d/)) {
-      this.handleOperation(key)
-    }
-    else {
-      this.handleKey(key);
+      this.handleKey(match[0]);
     }
   }
 
@@ -89,11 +79,15 @@ export class App {
     // console.log("operation: ", operation);
     
     // Easy solution (for now)
-    this.onScreen.set(eval(this.onScreen()));
+    let solution = eval(this.onScreen());
+    solution = solution.toFixed(2);
+    this.onScreen.set(solution);
   }
   
   handleOperation(key: string) {
-    this.onScreen.set(eval(this.onScreen()) + key);
+    let solution = eval(this.onScreen());
+    solution = solution.toFixed(2);
+    this.onScreen.set(solution + key);
   }
 
   handleKey(key: string) {
