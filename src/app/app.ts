@@ -68,6 +68,9 @@ export class App {
   // Updates value of onScreen based on number key
   keyInput(key: string) {
     if (key === '=') this.handleSolve();
+    else if (!key.match(/\d/)) {
+      this.handleOperation(key)
+    }
     else {
       this.handleKey(key);
     }
@@ -84,9 +87,13 @@ export class App {
     // console.log("num1: ", num1);
     // console.log("num2: ", num2);
     // console.log("operation: ", operation);
-
+    
     // Easy solution (for now)
     this.onScreen.set(eval(this.onScreen()));
+  }
+  
+  handleOperation(key: string) {
+    this.onScreen.set(eval(this.onScreen()) + key);
   }
 
   handleKey(key: string) {
