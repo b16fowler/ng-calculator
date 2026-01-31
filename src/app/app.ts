@@ -35,7 +35,7 @@ import { Operation } from "../components/buttons/operation/operation";
       <app-number key="." />
       <app-operation key="/" (clicked)="handleOperation('/')"/>
     </div>
-    <app-operation key="=" (clicked)="handleOperation('=')"/>
+    <app-operation key="=" (clicked)="handleSolve()"/>
     <app-clear (clicked)="clear()"></app-clear>
   `,
   styles: [
@@ -78,16 +78,17 @@ export class App {
     // console.log("num2: ", num2);
     // console.log("operation: ", operation);
     
-    // Easy solution (for now)
+    // eval solution (for now)
     let solution = eval(this.onScreen());
     solution = solution.toFixed(2);
+    this.handleRound(solution)
     this.onScreen.set(solution);
   }
   
   //TODO ONLY ROUND TO 2 DECIMAL PLACES WHEN NOT INTEGER
   handleOperation(key: string) {
     let solution = eval(this.onScreen());
-    solution = solution.toFixed(2);
+    // solution = this.handleRound(solution);
     if (key === "=") this.onScreen.set(solution)
     else {
       this.onScreen.set(solution + key);
@@ -99,6 +100,15 @@ export class App {
     else {
       this.onScreen.update(val => val + key);
     }
+  }
+
+  handleRound(solution: number) {
+    console.log(solution);
+    // solution has none zero decimal
+    console.log(typeof solution);
+    console.log(typeof solution.toFixed(2));
+    
+    
   }
 
   // Reset onScreen to 0
