@@ -84,10 +84,14 @@ export class App {
     this.onScreen.set(solution);
   }
   
+  //TODO ONLY ROUND TO 2 DECIMAL PLACES WHEN NOT INTEGER
   handleOperation(key: string) {
     let solution = eval(this.onScreen());
     solution = solution.toFixed(2);
-    this.onScreen.set(solution + key);
+    if (key === "=") this.onScreen.set(solution)
+    else {
+      this.onScreen.set(solution + key);
+    }
   }
 
   handleKey(key: string) {
