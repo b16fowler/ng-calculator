@@ -58,14 +58,26 @@ import { Operation } from '../components/buttons/operation/operation';
 export class App {
   onScreen = signal('0');
 
-  //TODO: ADD GLOBAL LISTENERS FOR OPERATION KEYS
   // Global listener for any keydowns
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
     // If pressed key is a number, call keyInput for digit
-    const match = event.key.match(/\d/);
-    if (match) {
-      this.handleKey(match[0]);
+    const numMatch = event.key.match(/\d/);
+    if (numMatch) {
+      this.handleKey(numMatch[0]);
+    }
+
+    const opMatch = event.key.match(/[+\-*\/]/);
+    if (opMatch) {
+      this.handleOperation(opMatch[0]);
+    }
+
+    if (event.key === 'Enter') {
+      this.handleOperation('=');
+    }
+
+    if (event.key === 'Backspace') {
+      this.clear();
     }
   }
 
@@ -74,7 +86,9 @@ export class App {
     let solution = eval(this.onScreen());
     solution = this.checkRounding(solution);
     if (key === '=') this.onScreen.set(solution);
-    else {
+    else if (this.onScreen() === '0') {
+      return;
+    } else {
       this.onScreen.set(solution + key);
     }
   }
