@@ -58,6 +58,7 @@ import { Operation } from '../components/buttons/operation/operation';
 export class App {
   onScreen = signal('0');
 
+  //TODO: ADD GLOBAL LISTENERS FOR OPERATION KEYS
   // Global listener for any keydowns
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
