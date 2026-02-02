@@ -1,13 +1,13 @@
-import { Component, HostListener, signal } from '@angular/core';
 import { Header } from '../components/header/header';
-import { Number } from '../components/buttons/number/number';
 import { Screen } from '../components/screen/screen';
 import { Clear } from '../components/buttons/clear/clear';
+import { Number } from '../components/buttons/number/number';
+import { Component, HostListener, signal } from '@angular/core';
 import { Operation } from '../components/buttons/operation/operation';
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Number, Screen, Clear, Operation],
+  imports: [Header, Number, Screen, Operation, Clear],
   template: `
     <app-header />
     <app-screen [onScreen]="onScreen()" />
@@ -35,11 +35,10 @@ import { Operation } from '../components/buttons/operation/operation';
     <div class="keypad-row">
       <app-number key=" " />
       <app-number key="0" (clicked)="handleKey('0')" />
-      <app-number key="." />
+      <app-number key="." (clicked)="handleKey('.')" />
       <app-operation key="/" (clicked)="handleOperation('/')" />
-      <app-operation key=" " />
+      <app-clear (clicked)="clear()"></app-clear>
     </div>
-    <app-clear (clicked)="clear()"></app-clear>
   `,
   styles: [
     `
