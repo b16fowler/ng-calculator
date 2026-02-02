@@ -3,15 +3,15 @@ import { Component, output } from '@angular/core';
 @Component({
   selector: 'app-clear',
   imports: [],
-  template: `
-    <button (click)="handleClick()">Clear</button>
-  `,
+  template: ` <button (click)="handleClick()">C</button> `,
   styles: `
     button {
       display: block;
       margin: 0 auto;
-      margin-top: 3%;
+      padding: 15px;
       font-size: 36px;
+      width: 65px;
+      height: 90px;
     }
   `,
 })
