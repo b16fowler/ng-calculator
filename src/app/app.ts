@@ -15,28 +15,28 @@ import { Operation } from '../components/buttons/operation/operation';
       <app-number key="7" (clicked)="handleKey('7')" />
       <app-number key="8" (clicked)="handleKey('8')" />
       <app-number key="9" (clicked)="handleKey('9')" />
-      <app-operation key="+" (clicked)="handleOperation('+')" />
-      <app-operation key="=" (clicked)="handleOperation('=')" />
+      <app-operation key="+" (clicked)="handleKey('+')" />
+      <app-operation key="=" (clicked)="handleKey('=')" />
     </div>
     <div class="keypad-row">
       <app-number key="4" (clicked)="handleKey('4')" />
       <app-number key="5" (clicked)="handleKey('5')" />
       <app-number key="6" (clicked)="handleKey('6')" />
-      <app-operation key="-" (clicked)="handleOperation('-')" />
+      <app-operation key="-" (clicked)="handleKey('-')" />
       <app-operation key=" " />
     </div>
     <div class="keypad-row">
       <app-number key="1" (clicked)="handleKey('1')" />
       <app-number key="2" (clicked)="handleKey('2')" />
       <app-number key="3" (clicked)="handleKey('3')" />
-      <app-operation key="*" (clicked)="handleOperation('*')" />
+      <app-operation key="*" (clicked)="handleKey('*')" />
       <app-operation key=" " />
     </div>
     <div class="keypad-row">
       <app-number key=" " />
       <app-number key="0" (clicked)="handleKey('0')" />
       <app-number key="." (clicked)="handleKey('.')" />
-      <app-operation key="/" (clicked)="handleOperation('/')" />
+      <app-operation key="/" (clicked)="handleKey('/')" />
       <app-clear (clicked)="clear()"></app-clear>
     </div>
   `,
@@ -61,42 +61,50 @@ export class App {
   // Global listener for any keydowns
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    // If pressed key is a number, call keyInput for digit
-    const numMatch = event.key.match(/\d/);
-    if (numMatch) {
-      this.handleKey(numMatch[0]);
-    }
-
-    const opMatch = event.key.match(/[+\-*\/]/);
-    if (opMatch) {
-      this.handleOperation(opMatch[0]);
-    }
-
-    if (event.key === 'Enter') {
-      this.handleOperation('=');
-    }
-
+    // Backspace key clears
     if (event.key === 'Backspace') {
       this.clear();
     }
+    // Enter is =
+    else if (event.key === 'Enter') {
+      this.handleKey('=');
+    }
+    // Handle any other input
+    this.handleKey(event.key);
   }
 
-  //TODO ONLY ROUND TO 2 DECIMAL PLACES WHEN NOT INTEGER
+  handleKey(key: string) {
+    // key is a digit
+    if (key.match(/\d|[.]/)) {
+      this.handleDigit(key);
+    }
+    // key is an operation
+    else if (key.match(/[+\-=*\/]/)) {
+      this.handleOperation(key);
+    }
+  }
+
+  handleDigit(key: string) {
+    // For first input, set screen to key entered
+    if (this.onScreen() === '0') this.onScreen.set(key);
+    else {
+      // Concat key to onSceen
+      this.onScreen.update((val) => val + key);
+    }
+  }
+
   handleOperation(key: string) {
+    // Solve expression onScreen
     let solution = eval(this.onScreen());
-    solution = this.checkRounding(solution);
+    // Round if needed
+    solution = this.checkRounding(eval(this.onScreen()));
+    // Solve
     if (key === '=') this.onScreen.set(solution);
     else if (this.onScreen() === '0') {
       return;
     } else {
+      // Solve, then ready for next entry
       this.onScreen.set(solution + key);
-    }
-  }
-
-  handleKey(key: string) {
-    if (this.onScreen() === '0') this.onScreen.set(key);
-    else {
-      this.onScreen.update((val) => val + key);
     }
   }
 
