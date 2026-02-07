@@ -4,10 +4,13 @@ import { Clear } from '../components/buttons/clear/clear';
 import { Number } from '../components/buttons/number/number';
 import { Component, HostListener, signal } from '@angular/core';
 import { Operation } from '../components/buttons/operation/operation';
+import { Invert } from '../components/buttons/invert/invert';
+
+//TODO: CHECK IF 'KEY', 'OPERATION' COMPONENTNS ARE NEEDED, CAN BE ONE?
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Number, Screen, Operation, Clear],
+  imports: [Header, Number, Screen, Operation, Clear, Invert],
   template: `
     <app-header />
     <app-screen [onScreen]="onScreen()" />
@@ -33,7 +36,7 @@ import { Operation } from '../components/buttons/operation/operation';
       <app-operation key=" " />
     </div>
     <div class="keypad-row">
-      <app-number key=" " />
+      <app-invert key="+/-" (clicked)="handleInvert()"></app-invert>
       <app-number key="0" (clicked)="handleKey('0')" />
       <app-number key="." (clicked)="handleKey('.')" />
       <app-operation key="/" (clicked)="handleKey('/')" />
@@ -106,6 +109,14 @@ export class App {
       // Solve, then ready for next entry
       this.onScreen.set(solution + key);
     }
+  }
+
+  handleInvert() {
+    if (this.onScreen()[0] === '-') {
+      this.onScreen.set(this.onScreen().slice(1));
+      return;
+    }
+    this.onScreen.set('-' + this.onScreen());
   }
 
   checkRounding(solution: number) {
