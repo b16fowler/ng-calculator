@@ -19,6 +19,8 @@ export class Invert {
   clicked = output<void>();
   key = input<string>();
 
+  //TODO: FIX BUG WHEN MULTIPLYING NEGATIVE NUMBERS
+
   handleClick() {
     this.clicked.emit();
   }
