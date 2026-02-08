@@ -2,15 +2,16 @@ import { Header } from '../components/header/header';
 import { Screen } from '../components/screen/screen';
 import { Clear } from '../components/buttons/clear/clear';
 import { Number } from '../components/buttons/number/number';
+import { Delete } from '../components/buttons/delete/delete';
 import { Component, HostListener, signal } from '@angular/core';
 import { Operation } from '../components/buttons/operation/operation';
 import { Invert } from '../components/buttons/invert/invert';
 
-//TODO: CHECK IF 'KEY', 'OPERATION' COMPONENTNS ARE NEEDED, CAN BE ONE?
+//TODO: CONSOLIDATE FUNCTIONS
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Number, Screen, Operation, Clear, Invert],
+  imports: [Header, Number, Screen, Operation, Clear, Invert, Delete],
   template: `
     <app-header />
     <app-screen [onScreen]="onScreen()" />
@@ -33,7 +34,7 @@ import { Invert } from '../components/buttons/invert/invert';
       <app-number key="2" (clicked)="handleKey('2')" />
       <app-number key="3" (clicked)="handleKey('3')" />
       <app-operation key="*" (clicked)="handleKey('*')" />
-      <app-operation key=" " />
+      <app-delete key="<-" (clicked)="handleBack()"></app-delete>
     </div>
     <div class="keypad-row">
       <app-invert key="+/-" (clicked)="handleInvert()"></app-invert>
@@ -71,6 +72,10 @@ export class App {
     // Enter is =
     else if (event.key === 'Enter') {
       this.handleKey('=');
+    }
+    // Delete
+    else if (event.key === 'Delete') {
+      this.handleBack();
     }
     // Handle any other input
     this.handleKey(event.key);
@@ -117,6 +122,16 @@ export class App {
       return;
     }
     this.onScreen.set('-' + this.onScreen());
+  }
+
+  handleBack() {
+    // Determine length of string onScreen
+    let screenLength = this.onScreen().length;
+    if (screenLength === 1) {
+      this.onScreen.set('0');
+      return;
+    }
+    this.onScreen.set(this.onScreen().slice(0, screenLength - 1));
   }
 
   checkRounding(solution: number) {
